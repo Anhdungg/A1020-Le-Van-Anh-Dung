@@ -1,6 +1,7 @@
 package controller;
 
 import manage.ManageStudent;
+import manage.NotFoundStudentException;
 
 import java.util.Scanner;
 
@@ -25,10 +26,20 @@ public class ControllerStudent {
                     System.out.println(manage.showAllStudent() + "\n");
                     break;
                 case "3":
-                    System.out.println(manage.editStudent(input) + "\n");
+                    String edit = manage.editStudent(input);
+                    if (!edit.equals("")){
+                        System.out.println(edit + "\n");
+                    }else {
+                        System.out.println();
+                    }
                     break;
                 case "4":
-                    System.out.println(manage.deleteStudent(input) + "\n");
+                    String delete = manage.deleteStudent(input);
+                    if (!delete.equals("")){
+                        System.out.println(delete + "\n");
+                    }else {
+                        System.out.println();
+                    }
                     break;
                 case "5":
                     if (this.findStudent(input)){
@@ -68,7 +79,12 @@ public class ControllerStudent {
                 case "3":
                 case "4":
                 case "5":
-                    System.out.println(manage.searchStudent(input, select) + "\n");
+                    String str = manage.searchStudent(input, select);
+                    if (!str.equals("")){
+                        System.out.println(str + "\n");
+                    }else {
+                        System.out.println();
+                    }
                     break;
                 case "6":
                     return true;
