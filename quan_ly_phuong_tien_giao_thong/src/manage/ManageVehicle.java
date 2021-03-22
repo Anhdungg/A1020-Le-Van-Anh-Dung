@@ -14,7 +14,7 @@ public class ManageVehicle {
         switch (typeVehicle){
             case "car":
                 String numberOfSeats = this.checkInput(input, "numberOfSeats");
-                String typeCar = this.checkInput(input, )
+//                String typeCar = this.checkInput(input, )
                 break;
             case "truck":
                 break;
