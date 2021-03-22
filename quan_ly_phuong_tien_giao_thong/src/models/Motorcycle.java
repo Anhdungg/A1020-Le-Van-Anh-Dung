@@ -1,30 +1,19 @@
 package models;
 
 public class Motorcycle extends Vehicle {
-    private String numberOfSeats;
-    private String typeCar;
+    private String wattage;
 
-    public Motorcycle(String licensePlates, String manufacturerName, String yearOfManufacture, String ownerName,
-                      String numberOfSeats, String typeCar) {
+    public Motorcycle(String licensePlates, String manufacturerName, String yearOfManufacture, String ownerName, String wattage) {
         super(licensePlates, manufacturerName, yearOfManufacture, ownerName);
-        this.numberOfSeats = numberOfSeats;
-        this.typeCar = typeCar;
+        this.wattage = wattage;
     }
 
-    public String getNumberOfSeats() {
-        return numberOfSeats;
+    public String getWattage() {
+        return wattage;
     }
 
-    public void setNumberOfSeats(String numberOfSeats) {
-        this.numberOfSeats = numberOfSeats;
-    }
-
-    public String getTypeCar() {
-        return typeCar;
-    }
-
-    public void setTypeCar(String typeCar) {
-        this.typeCar = typeCar;
+    public void setWattage(String wattage) {
+        this.wattage = wattage;
     }
 
     @Override
@@ -33,15 +22,6 @@ public class Motorcycle extends Vehicle {
                 ", Manufacturer Name: " + getManufacturerName() +
                 ", Year Of Manufacture: " + getYearOfManufacture() +
                 ", Owner Name: " + getOwnerName() +
-                ", Number Of Seats: " + numberOfSeats +
-                ", Type Car: " + typeCar;
-    }
-
-    @Override
-    public String toString() {
-        return "Motorcycle{" +
-                "numberOfSeats='" + numberOfSeats + '\'' +
-                ", typeCar='" + typeCar + '\'' +
-                '}';
+                ", Wattage: " + this.wattage;
     }
 }
