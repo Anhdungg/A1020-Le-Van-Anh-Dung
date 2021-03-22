@@ -55,9 +55,12 @@ public class ManageStudent {
             String data = input.nextLine();
             if (data.matches(regex)) {
                 if (type.equals("id")){
-                    if (this.findId(data) != -1){
-                        System.out.println("Id học sinh đã tồn tại.");
+                    try {
+                        this.findId(data);
+                        System.out.println("Id học sinh đã tồn tại.\n");
                         continue;
+                    }catch (NotFoundStudentException e){
+
                     }
                 }
                 return data;
@@ -101,13 +104,10 @@ public class ManageStudent {
         return output.substring(0, output.length()-1);
     }
 
-    public String editStudent(Scanner input){
-        System.out.print("Nhập id: ");
-        String id = input.nextLine();
-        this.updateListStudent();
-        int localId = this.findId(id);
-        if (localId==-1){
-            return "Không tìm thấy Id học sinh.";
+    public String editStudent(Scanner input) {
+        int localId = this.findId(input);
+        if (localId == -1){
+            return "";
         }
         this.list.get(localId).setName(this.checkInput(input, "name"));
         this.list.get(localId).setGender(this.checkInput(input, "gender"));
@@ -117,13 +117,10 @@ public class ManageStudent {
         return fileStudent.writeFile(convertListToString(), false);
     }
 
-    public String deleteStudent(Scanner input){
-        System.out.print("Nhập id: ");
-        String id = input.nextLine();
-        this.updateListStudent();
-        int localId = this.findId(id);
+    public String deleteStudent(Scanner input) {
+        int localId = this.findId(input);
         if (localId == -1){
-            return "Không tìm thấy Id học sinh.";
+            return "";
         }
         this.list.remove(localId);
         System.out.println(convertListToString());
@@ -131,37 +128,46 @@ public class ManageStudent {
     }
 
     public String searchStudent(Scanner input, String typeSearch){
+        String str;
         this.updateListStudent();
         if (this.list.isEmpty()){
             return "File rỗng. Kiểm tra lại file.";
         }
-        switch (typeSearch){
-            case "1":
-                System.out.print("Nhập Id: ");
-                String id = input.nextLine();
-                return this.search(id, typeSearch);
-            case "2":
-                System.out.print("Nhập tên: ");
-                String name = input.nextLine();
-                return this.search(name, typeSearch);
-            case "3":
-                System.out.print("Nhập giới tính: ");
-                String gender = input.nextLine();
-                return this.search(gender, typeSearch);
-            case "4":
-                System.out.print("Nhập ngày tháng năm sinh: ");
-                String dayOfBirth = input.nextLine();
-                return this.search(dayOfBirth, typeSearch);
-            case "5":
-                System.out.print("Nhập tên lớp: ");
-                String nameClass = input.nextLine();
-                return this.search(nameClass, typeSearch);
-            default:
-                return "Kiểm tra lại code!!!";
-        }
+        do {
+            try {
+                switch (typeSearch) {
+                    case "1":
+                        System.out.print("Nhập Id(nhập exit để thoát): ");
+                        break;
+                    case "2":
+                        System.out.print("Nhập tên(nhập exit để thoát): ");
+                        break;
+                    case "3":
+                        System.out.print("Nhập giới tính(nhập exit để thoát): ");
+                        break;
+                    case "4":
+                        System.out.print("Nhập ngày tháng năm sinh(nhập exit để thoát): ");
+                        break;
+                    case "5":
+                        System.out.print("Nhập tên lớp(nhập exit để thoát): ");
+                        break;
+                    default:
+                        return "Kiểm tra lại code!!!";
+                }
+                String value = input.nextLine();
+                if (value.equals("exit")){
+                    return "";
+                }
+                str = this.search(value, typeSearch);
+            } catch (NotFoundStudentException e) {
+                str = "";
+                System.out.println("Không tìm thấy \n");
+            }
+        }while (str.equals(""));
+        return str;
     }
 
-    private String search(String value, String typeSearch){
+    private String search(String value, String typeSearch) throws NotFoundStudentException {
         StringBuilder output = new StringBuilder();
         for (Student student : this.list){
             switch (typeSearch){
@@ -194,7 +200,7 @@ public class ManageStudent {
 
         }
         if (output.length()<1){
-            return "Không tìm thấy";
+            throw new NotFoundStudentException();
         }
         return output.substring(0, output.length()-1);
     }
@@ -227,16 +233,35 @@ public class ManageStudent {
         return output.toString();
     }
 
-    private int findId(String id){
+    private int findId(Scanner input){
+        this.updateListStudent();
+        int localId;
+        do{
+            System.out.print("Nhập id(nhập exit để thoát): ");
+            String id = input.nextLine();
+            if (id.equals("exit")){
+                return -1;
+            }
+            try {
+                localId = this.findId(id);
+            }catch (NotFoundStudentException e){
+                System.out.println("Không tìm thấy Id học sinh.\n");
+                localId = -1;
+            }
+        }while (localId==-1);
+        return localId;
+    }
+
+    private int findId(String id) throws NotFoundStudentException {
         if (this.list.isEmpty()){
-            return -1;
+            throw new NotFoundStudentException();
         }
         for (int i=0; i<this.list.size(); i++){
             if (this.list.get(i).getId().equals(id)){
                 return i;
             }
         }
-        return -1;
+        throw new NotFoundStudentException();
     }
 
     private void updateListStudent(){
