@@ -4,8 +4,8 @@ public class Car extends Vehicle {
     private String numberOfSeats;
     private String typeCar;
 
-    public Car(String licensePlates, String manufacturerName, String yearOfManufacture, String ownerName,
-               String numberOfSeats, String typeCar) {
+    public Car(String licensePlates, String manufacturerName, String yearOfManufacture, String typeCar, String ownerName,
+               String numberOfSeats) {
         super(licensePlates, manufacturerName, yearOfManufacture, ownerName);
         this.numberOfSeats = numberOfSeats;
         this.typeCar = typeCar;
@@ -27,6 +27,11 @@ public class Car extends Vehicle {
         this.typeCar = typeCar;
     }
 
+    public String writeData(){
+        return this.getLicensePlates()+","+this.getManufacturerName()+","+this.getYearOfManufacture()+","+this.typeCar
+                +","+this.getOwnerName()+","+this.numberOfSeats;
+    }
+
     @Override
     public String showInformation() {
         return "License Plates: " + getLicensePlates() +
@@ -39,9 +44,6 @@ public class Car extends Vehicle {
 
     @Override
     public String toString() {
-        return "Motorcycle{" +
-                "numberOfSeats='" + numberOfSeats + '\'' +
-                ", typeCar='" + typeCar + '\'' +
-                '}';
+        return this.showInformation();
     }
 }

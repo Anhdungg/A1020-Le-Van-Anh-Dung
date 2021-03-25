@@ -1,6 +1,7 @@
 package controller;
 
 import manage.ManageVehicle;
+import manage.NotFoundVehicleException;
 
 import java.util.Scanner;
 
@@ -8,6 +9,7 @@ public class ControllerVehicle {
     private final ManageVehicle manageVehicle = new ManageVehicle();
 
     public void displayMainMenu(Scanner input){
+        manageVehicle.updateListManufacturer();
         while (true){
             System.out.print("1. Thêm phương tiện\n" +
                     "2. Hiển thị phương tiện\n" +
@@ -23,12 +25,29 @@ public class ControllerVehicle {
                         return;
                     }
                 case "2":
-                    break;
+                    if (this.showInformation(input)){
+                        break;
+                    }else {
+                        return;
+                    }
                 case "3":
+                    try{
+                        String status = manageVehicle.deleteVehicle(input);
+                        if (status.equals("")){
+                            System.out.println();
+                        }else if (status.equals("Write file failed")){
+                            System.out.println("Xoá phương tiện không thành công.\n");
+                        }else {
+                            System.out.println("Xoá phương tiện thành công.\n");
+                        }
+                    }catch (NotFoundVehicleException e){
+                        System.out.println("Không tìm thấy biển số xe\n");
+                    }
+                    break;
                 case "4":
                     return;
                 default:
-                    System.out.println("Chọn sai. Hãy chọn lại");
+                    System.out.println("Chọn sai. Hãy chọn lại\n");
             }
         }
     }
@@ -61,7 +80,7 @@ public class ControllerVehicle {
                 case "5":
                     return false;
                 default:
-                    System.out.println("Chọn sai. Hãy chọn lại");
+                    System.out.println("Chọn sai. Hãy chọn lại\n");
             }
         }
     }
@@ -92,6 +111,35 @@ public class ControllerVehicle {
         }
     }
 
+    private boolean showInformation(Scanner input){
+        String select;
+        while (true){
+            System.out.print("1. Hiển thị xe tải.\n" +
+                    "2. Hiển thị xe ô tô.\n" +
+                    "3. Hiển thị xe máy.\n" +
+                    "4. Trở lại.\n" +
+                    "5. Thoát.\n" +
+                    "Chọn menu: ");
+            select = input.nextLine();
+            switch (select){
+                case "1":
+                    System.out.println(manageVehicle.showInformation("truck") + "\n");
+                    break;
+                case "2":
+                    System.out.println(manageVehicle.showInformation("car") + "\n");
+                    break;
+                case "3":
+                    System.out.println(manageVehicle.showInformation("motorcycle") + "\n");
+                    break;
+                case "4":
+                    return true;
+                case "5":
+                    return false;
+                default:
+                    System.out.println("Chọn sai. Hãy chọn lại\n");
+            }
+        }
+    }
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         ControllerVehicle controller = new ControllerVehicle();

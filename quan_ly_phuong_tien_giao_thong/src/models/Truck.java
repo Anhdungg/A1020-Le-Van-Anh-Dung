@@ -17,6 +17,11 @@ public class Truck extends Vehicle {
         this.payload = payload;
     }
 
+    public String writeData(){
+        return this.getLicensePlates()+","+this.getManufacturerName()+","+this.getYearOfManufacture() +","
+                +this.getOwnerName()+","+this.payload;
+    }
+
     @Override
     public String showInformation() {
         return "License Plates: " + getLicensePlates() +
@@ -24,5 +29,10 @@ public class Truck extends Vehicle {
                 ", Year Of Manufacture: " + getYearOfManufacture() +
                 ", Owner Name: " + getOwnerName() +
                 ", Payload: " + this.payload;
+    }
+
+    @Override
+    public String toString() {
+        return this.showInformation();
     }
 }

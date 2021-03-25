@@ -16,6 +16,11 @@ public class Motorcycle extends Vehicle {
         this.wattage = wattage;
     }
 
+    public String writeData(){
+        return this.getLicensePlates()+","+this.getManufacturerName()+","+this.getYearOfManufacture()+","
+                +this.getOwnerName()+","+this.wattage;
+    }
+
     @Override
     public String showInformation() {
         return "License Plates: " + getLicensePlates() +
@@ -23,5 +28,10 @@ public class Motorcycle extends Vehicle {
                 ", Year Of Manufacture: " + getYearOfManufacture() +
                 ", Owner Name: " + getOwnerName() +
                 ", Wattage: " + this.wattage;
+    }
+
+    @Override
+    public String toString() {
+        return this.showInformation();
     }
 }
