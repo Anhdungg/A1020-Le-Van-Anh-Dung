@@ -2,17 +2,18 @@ package models;
 
 public abstract class BenhAn {
     String stt;
-    String idBenhAn;
-    String nameBenhAn;
+    String maBenhAn;
+    String maBenhNhan;
     String tenBenhNhan;
     String ngayNhapVien;
     String ngayRaVien;
     String lyDoNhapVien;
 
-    public BenhAn(String stt, String idBenhAn, String nameBenhAn, String tenBenhNhan, String ngayNhapVien, String ngayRaVien, String lyDoNhapVien) {
+
+    public BenhAn(String stt, String maBenhAn, String maBenhNhan, String tenBenhNhan, String ngayNhapVien, String ngayRaVien, String lyDoNhapVien) {
         this.stt = stt;
-        this.idBenhAn = idBenhAn;
-        this.nameBenhAn = nameBenhAn;
+        this.maBenhAn = maBenhAn;
+        this.maBenhNhan = maBenhNhan;
         this.tenBenhNhan = tenBenhNhan;
         this.ngayNhapVien = ngayNhapVien;
         this.ngayRaVien = ngayRaVien;
@@ -28,20 +29,28 @@ public abstract class BenhAn {
         this.stt = stt;
     }
 
-    public String getIdBenhAn() {
-        return idBenhAn;
+    public String getMaBenhAn() {
+        return maBenhAn;
     }
 
-    public void setIdBenhAn(String idBenhAn) {
-        this.idBenhAn = idBenhAn;
+    public void setMaBenhAn(String maBenhAn) {
+        this.maBenhAn = maBenhAn;
     }
 
-    public String getNameBenhAn() {
-        return nameBenhAn;
+    public String getMaBenhNhan() {
+        return maBenhNhan;
     }
 
-    public void setNameBenhAn(String nameBenhAn) {
-        this.nameBenhAn = nameBenhAn;
+    public void setMaBenhNhan(String maBenhNhan) {
+        this.maBenhNhan = maBenhNhan;
+    }
+
+    public String getTenBenhNhan() {
+        return tenBenhNhan;
+    }
+
+    public void setTenBenhNhan(String tenBenhNhan) {
+        this.tenBenhNhan = tenBenhNhan;
     }
 
     public String getNgayNhapVien() {
@@ -68,8 +77,13 @@ public abstract class BenhAn {
         this.lyDoNhapVien = lyDoNhapVien;
     }
 
+    public String writeFile(){
+        return this.stt + "," + this.maBenhAn+ "," + this.maBenhNhan + "," + this.tenBenhNhan + ","
+                + this.ngayNhapVien + "," + this.ngayRaVien + "," + this.lyDoNhapVien;
+    }
+
     public String showInformation(){
-        return "Số thứ tự: " + this.stt + ", Mã bệnh án: " + this.idBenhAn + ", Tên bệnh án: " + this.nameBenhAn
+        return "Stt: " + this.stt + ", Mã bệnh án: " + this.maBenhNhan + ", Mã bệnh nhân: " + this.maBenhNhan
                 +", Tên bệnh nhân: " + this.tenBenhNhan + ", Ngày nhập viện: " + this.ngayNhapVien + ", Ngày ra viện: " + this.ngayRaVien
                 + ", Lý do nhập viện: " + this.lyDoNhapVien;
     }
@@ -77,8 +91,8 @@ public abstract class BenhAn {
     public String toString() {
         return "BenhAn{" +
                 "stt='" + stt + '\'' +
-                ", idBenhAn='" + idBenhAn + '\'' +
-                ", nameBenhAn='" + nameBenhAn + '\'' +
+                ", maBenhAn='" + maBenhNhan + '\'' +
+                ", tenBenhAn='" + maBenhNhan + '\'' +
                 ", ngayNhapVien='" + ngayNhapVien + '\'' +
                 ", ngayRaVien='" + ngayRaVien + '\'' +
                 ", lyDoNhapVien='" + lyDoNhapVien + '\'' +

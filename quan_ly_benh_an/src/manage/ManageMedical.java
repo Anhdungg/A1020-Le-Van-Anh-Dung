@@ -1,6 +1,7 @@
 package manage;
 
 import common.ReadWriteFile;
+import models.BenhAn;
 import models.BenhAnThuong;
 import models.BenhAnVIP;
 
@@ -10,10 +11,10 @@ import java.util.Scanner;
 public class ManageMedical {
     private final String PATH_FILE_MEDICAL = "src\\data\\medical_records.csv";
     private final ReadWriteFile readWriteFile = new ReadWriteFile();
-    private static int stt = 1;
+    private int stt = this.getList().size();
     public void addNewMedical(Scanner input, String typeMedical){
-        String idMedical = this.checkInput(input, "idMedical", "");
-        if (idMedical.equals("exit")){
+        String maBenhAn = this.checkInput(input, "maBenhAn", "");
+        if (maBenhAn.equals("exit")){
             return;
         }
         String maBenhNhan = this.checkInput(input, "maBenhNhan", "");
@@ -38,7 +39,7 @@ public class ManageMedical {
         if (lyDoNhapVien.equals("exit")){
             return;
         }
-        String dataWrite = "";
+        String dataWrite;
         switch (typeMedical){
             case "thuong":
                 System.out.print("Phí nằm viện(nhập exit để thoát): ");
@@ -46,7 +47,7 @@ public class ManageMedical {
                 if (phiNamVien.equals("exit")){
                     return;
                 }
-                dataWrite = stt+","+idMedical+","+maBenhNhan+","+tenBenhNhan+","+ngayNhapVien+","+ngayRaVien+","
+                dataWrite = stt+","+maBenhAn+","+maBenhNhan+","+tenBenhNhan+","+ngayNhapVien+","+ngayRaVien+","
                         +lyDoNhapVien+","+phiNamVien;
                 System.out.println(readWriteFile.writeFile(PATH_FILE_MEDICAL, dataWrite, true));
                 stt++;
@@ -60,7 +61,7 @@ public class ManageMedical {
                 if (thoiHan.equals("exit")){
                     return;
                 }
-                dataWrite = stt+","+idMedical+","+maBenhNhan+","+tenBenhNhan+","+ngayNhapVien+","+ngayRaVien+","
+                dataWrite = stt+","+maBenhAn+","+maBenhNhan+","+tenBenhNhan+","+ngayNhapVien+","+ngayRaVien+","
                         +lyDoNhapVien+","+loaiVIP+","+thoiHan;
                 System.out.println(readWriteFile.writeFile(PATH_FILE_MEDICAL, dataWrite, true));
                 stt++;
@@ -69,16 +70,16 @@ public class ManageMedical {
     }
 
     private String checkInput(Scanner input, String type, String ngayNhapVien){
-        String checkIdMedical = "^(BA-)[\\d]{3}$";
+        String checkMabenhAn = "^(BA-)[\\d]{3}$";
         String checkIdBenhNhan = "^(BN-)[\\d]{3}$";
         String checkDate = "^[0-3]\\d[/][0-1][0-9][/][0-9]{4}$";
         String checkVIP = "^(VIP I|VIP II|VIP III)$";
         String regex="";
         while (true) {
             switch (type) {
-                case "idMedical":
+                case "maBenhAn":
                     System.out.print("Mã bệnh án(nhập exit để thoát): ");
-                    regex = checkIdMedical;
+                    regex = checkMabenhAn;
                     break;
                 case "maBenhNhan":
                     System.out.print("Mã bệnh nhân(nhập exit để thoát): ");
@@ -117,7 +118,7 @@ public class ManageMedical {
                 }
             } else {
                 switch (type) {
-                    case "idMedical":
+                    case "maBenhAn":
                         System.out.println("Mã bệnh án phải đúng định dạng BA-XXX, với XXX là các kí tự số");
                         break;
                     case "maBenhNhan":
@@ -157,10 +158,80 @@ public class ManageMedical {
 
     public String showInformation(){
         StringBuilder output = new StringBuilder();
-        for (Object object: this.getList()){
-            output.append(object);
+        ArrayList<Object> list = this.getList();
+        for (Object object : list){
+            if (object instanceof BenhAnThuong){
+                BenhAnThuong benhAnThuong = (BenhAnThuong) object;
+                output.append(benhAnThuong.showInformation()).append("\n");
+            }else if (object instanceof BenhAnVIP){
+                BenhAnVIP benhAnVIP = (BenhAnVIP) object;
+                output.append(benhAnVIP.showInformation()).append("\n");
+            }
         }
         return output.toString();
+    }
+
+    public String xoaBenhAn(Scanner input){
+        System.out.println(this.showInformation());
+        ArrayList<Object> list = this.getList();
+        System.out.print("Nhập số thứ tự bệnh án cần xoá(nhập exit để thoát): ");
+        String stt = input.nextLine();
+        if (stt.equals("exit")){
+            return "";
+        }
+        int location;
+        try{
+            location = this.timSttBenhAn(stt, list);
+            list.remove(location);
+            this.capNhapSttBenhAn(list);
+            if (readWriteFile.writeFile(PATH_FILE_MEDICAL, this.convertListToString(list), false).equals("Write file successful")){
+                return "Xoá thành công\n";
+            }else {
+                return "Lỗi đọc ghi file\n";
+            }
+
+        }catch (NotFoundBenhAnException e){
+            return "Xoá bệnh án không thành công\n";
+        }
+    }
+
+    private void capNhapSttBenhAn(ArrayList<Object> list){
+        for (int i=0; i<list.size(); i++){
+            if (list.get(i) instanceof BenhAn){
+                BenhAn benhAn = (BenhAn) list.get(i);
+                benhAn.setStt(Integer.toString(i+1));
+            }
+        }
+    }
+
+    private String convertListToString(ArrayList<Object> list){
+        StringBuilder output = new StringBuilder();
+        for (Object object : list){
+            if (object instanceof BenhAnThuong){
+                BenhAnThuong benhAnThuong = (BenhAnThuong) object;
+                output.append(benhAnThuong.writeFile()).append("\n");
+            }else if (object instanceof BenhAnVIP){
+                BenhAnVIP benhAnVIP = (BenhAnVIP) object;
+                output.append(benhAnVIP.writeFile()).append("\n");
+            }
+        }
+        return output.toString();
+    }
+    private int timSttBenhAn(String stt, ArrayList<Object> list) throws NotFoundBenhAnException{
+        for (int i=0; i<list.size(); i++){
+            if (list.get(i) instanceof BenhAnThuong){
+                BenhAnThuong benhAnThuong = (BenhAnThuong) list.get(i);
+                if (benhAnThuong.getStt().equals(stt)){
+                    return i;
+                }
+            }else if (list.get(i) instanceof BenhAnVIP){
+                BenhAnVIP benhAnVIP = (BenhAnVIP) list.get(i);
+                if (benhAnVIP.getStt().equals(stt)){
+                    return i;
+                }
+            }
+        }
+        throw new NotFoundBenhAnException();
     }
 
     private ArrayList<Object> getList(){
@@ -173,7 +244,7 @@ public class ManageMedical {
                 if (strings.length==9){
                     list.add(new BenhAnVIP(strings[0], strings[1], strings[2], strings[3], strings[4], strings[5],
                             strings[6], strings[7], strings[8]));
-                }else {
+                }else if (strings.length==8){
                     list.add(new BenhAnThuong(strings[0], strings[1], strings[2], strings[3], strings[4], strings[5],
                             strings[6], strings[7]));
                 }

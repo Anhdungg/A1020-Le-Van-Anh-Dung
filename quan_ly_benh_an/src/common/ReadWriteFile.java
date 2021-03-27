@@ -7,7 +7,6 @@ public class ReadWriteFile {
         try {
             FileWriter fileWriter;
             String dataFile = this.readFile(path);
-            System.out.println(dataFile);
             final String NEW_LINE = "\n";
             switch (dataFile){
                 case "":

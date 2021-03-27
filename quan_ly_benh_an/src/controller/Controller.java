@@ -23,6 +23,7 @@ public class Controller {
                         return;
                     }
                 case "2":
+                    System.out.println(manageMedical.xoaBenhAn(input));
                     break;
                 case "3":
                     System.out.println(manageMedical.showInformation());
